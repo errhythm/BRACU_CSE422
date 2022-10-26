@@ -13,7 +13,7 @@ for line in input_file:
 
 
 def a_star_algorithm(start_node, stop_node):
-    open_list = set([start_node])
+    open_list = {start_node}
     closed_list = set([])
     g = {start_node: 0}
     parents = {start_node: start_node}
@@ -55,8 +55,6 @@ def a_star_algorithm(start_node, stop_node):
     return None
 
 
-# start_node = input("Enter the start node: ")
-# destination_node = input("Enter the destination node: ")
-start_node = "Arad"
-destination_node = "Bucharest"
-a_star_algorithm(start_node, destination_node)
+start = input("Enter the start node: ")
+destination = input("Enter the destination node: ")
+a_star_algorithm(start, destination)
