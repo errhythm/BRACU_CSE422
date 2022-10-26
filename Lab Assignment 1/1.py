@@ -16,12 +16,9 @@ def a_star_algorithm(start_node, stop_node):
     open_list = set([start_node])
     closed_list = set([])
 
-    g = {}
+    g = {start_node: 0}
 
-    g[start_node] = 0
-
-    parents = {}
-    parents[start_node] = start_node
+    parents = {start_node: start_node}
 
     while len(open_list) > 0:
         n = None
@@ -30,7 +27,7 @@ def a_star_algorithm(start_node, stop_node):
             if n is None or g[v] + heuristic[v] < g[n] + heuristic[n]:
                 n = v
 
-        if n == None:
+        if n is None:
             print('Path does not exist!')
             return None
 
@@ -45,9 +42,8 @@ def a_star_algorithm(start_node, stop_node):
 
             result_path.reverse()
 
-            # print like Path: Arad -> Sibiu -> Rimnicu -> Pitesti -> Bucharest
             print('Path: {}'.format(' -> '.join(result_path)))
-            # get the total cost of the path Total distance: 418 km
+
             print('Total distance: {} km'.format(g[stop_node]))
             return result_path
 
