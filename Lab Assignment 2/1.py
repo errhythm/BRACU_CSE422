@@ -58,7 +58,6 @@ def alpha_beta_pruning(random_numbers, total_points, shuffle):
 
     return sum
 
-
 achieved_points = alpha_beta_pruning(random_numbers, total_points, shuffle)
 print("Achieved points =", achieved_points)
 if achieved_points >= int(total_points):
