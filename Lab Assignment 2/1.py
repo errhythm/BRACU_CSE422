@@ -1,7 +1,7 @@
 import random
 
 # student_id = input("Enter your student ID: ")
-student_id = "22241163"
+student_id = "25485465"
 
 student_id = student_id.replace("0", "8")
 
@@ -19,48 +19,52 @@ max_points = round(float(total_points) * 1.5)
 shuffle = student_id[3]
 # print("Shuffle the deck", shuffle, "times")
 
-random_numbers = []
-for i in range(8):
-    random_numbers.append(random.randint(int(min_points), int(max_points)))
+# random_numbers = []
+# for i in range(8):
+#     random_numbers.append(random.randint(int(min_points), int(max_points)))
+# print("Generated 8 random points between the minimum and maximum point limits:", random_numbers)
+# print("Total points to win", total_points)
+
+random_numbers = [66, 74, 14, 73, 19, 26, 32, 40]
 print("Generated 8 random points between the minimum and maximum point limits:", random_numbers)
-print("Total points to win", total_points)
 
 
-def alpha_beta_pruning(random_numbers, total_points, shuffle):
-    # sort the random_numbers in ascending order
-    random_numbers.sort()
-    # print("Sorted random numbers:", random_numbers)
+def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
+    if depth == 3:
+        return values[nodeIndex]
+    if maximizingPlayer:
+        best = -1000
 
-    # shuffle the deck
-    for i in range(int(shuffle)):
-        random.shuffle(random_numbers)
-    # print("Shuffled random numbers:", random_numbers)
+        # Recur for left and right children
+        for i in range(0, 2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
 
-    # remove the first 3 elements from the list
-    random_numbers = random_numbers[3:]
-    # print("Removed first 3 elements from the list:", random_numbers)
+            # Alpha Beta Pruning
+            if beta <= alpha:
+                break
 
-    # remove the last 3 elements from the list
-    random_numbers = random_numbers[:-3]
-    # print("Removed last 3 elements from the list:", random_numbers)
+        return best
 
-    # sum the remaining elements in the list
-    sum = 0
-    for i in random_numbers:
-        sum += i
-    # print("Sum of the remaining elements in the list:", sum)
-
-    # check if sum is greater than total_points
-    if sum > int(total_points):
-        print("Sum of the remaining elements in the list is greater than total points to win")
     else:
-        print("Sum of the remaining elements in the list is less than total points to win")
+        best = 1000
 
-    return sum
+        # Recur for left and right children
+        for i in range(0, 2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)
 
-achieved_points = alpha_beta_pruning(random_numbers, total_points, shuffle)
-print("Achieved points =", achieved_points)
-if achieved_points >= int(total_points):
-    print("Winner is Optimus Prime")
+            # Alpha Beta Pruning
+            if beta <= alpha:
+                break
+        return best
+
+
+print("Total points to win:", total_points)
+print("Achieved point by applying alpha-beta pruning =", minimax(0, 0, True, random_numbers, -1000, 1000))
+if minimax(0, 0, True, random_numbers, -1000, 1000) >= int(total_points):
+    print("The Winner is Optimus Prime")
 else:
-    print("Winner is Megatron")
+    print("The Winner is Megatron")
