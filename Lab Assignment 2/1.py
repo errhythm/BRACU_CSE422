@@ -1,70 +1,64 @@
 import random
 
-# student_id = input("Enter your student ID: ")
-student_id = "25485465"
-
+student_id = input("Enter student ID: \n")
 student_id = student_id.replace("0", "8")
-
-# get the 5th min_points of the student_id
 min_points = student_id[4]
-# print("Minimum points the Optimus Prime can achieve from the game =", min_points)
-
 total_points = student_id[-2:][::-1]
-# print("Total points to win = ", total_points)
-
 max_points = round(float(total_points) * 1.5)
-# print("Maximum points the Optimus Prime can achieve from the game =", max_points)
+
+random_numbers = []
+
+for i in range(8):
+    random_numbers.append(random.randint(int(min_points), int(max_points)))
 
 
-shuffle = student_id[3]
-# print("Shuffle the deck", shuffle, "times")
-
-# random_numbers = []
-# for i in range(8):
-#     random_numbers.append(random.randint(int(min_points), int(max_points)))
-# print("Generated 8 random points between the minimum and maximum point limits:", random_numbers)
-# print("Total points to win", total_points)
-
-random_numbers = [66, 74, 14, 73, 19, 26, 32, 40]
 print("Generated 8 random points between the minimum and maximum point limits:", random_numbers)
+print("Total points to win:", total_points)
 
 
-def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
+def alphabeta(depth, index, points, alpha, beta, maximize):
     if depth == 3:
-        return values[nodeIndex]
-    if maximizingPlayer:
-        best = -1000
-
-        # Recur for left and right children
+        return points[index]
+    if maximize:
+        bestval = -1000
         for i in range(0, 2):
-            val = minimax(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta)
-            best = max(best, val)
-            alpha = max(alpha, best)
-
-            # Alpha Beta Pruning
+            value = alphabeta(depth + 1, index * 2 + i, points, alpha, beta, False)
+            bestval = max(bestval, value)
+            alpha = max(alpha, bestval)
             if beta <= alpha:
                 break
-
-        return best
+        return bestval
 
     else:
-        best = 1000
-
-        # Recur for left and right children
+        bestval = 1000
         for i in range(0, 2):
-            val = minimax(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta)
-            best = min(best, val)
-            beta = min(beta, best)
-
-            # Alpha Beta Pruning
+            value = alphabeta(depth + 1, index * 2 + i, points, alpha, beta, True)
+            bestval = min(bestval, value)
+            beta = min(beta, bestval)
             if beta <= alpha:
                 break
-        return best
+        return bestval
 
 
-print("Total points to win:", total_points)
-print("Achieved point by applying alpha-beta pruning =", minimax(0, 0, True, random_numbers, -1000, 1000))
-if minimax(0, 0, True, random_numbers, -1000, 1000) >= int(total_points):
-    print("The Winner is Optimus Prime")
+print("Achieved point by applying alpha-beta pruning =", alphabeta(0, 0, random_numbers, -1000, 1000, True))
+
+if alphabeta(0, 0, random_numbers, -1000, 1000, True) >= int(total_points):
+    print("The Winner is Optimus Prime\n")
 else:
-    print("The Winner is Megatron")
+    print("The Winner is Megatron\n")
+
+print("After the shuffle: ")
+shuffle_result = []
+win = 0
+
+shuffle = student_id[3]
+
+for i in range(int(shuffle)):
+    random.shuffle(random_numbers)
+    shuffle_result.append(alphabeta(0, 0, random_numbers, -1000, 1000, True))
+    if alphabeta(0, 0, random_numbers, -1000, 1000, True) >= int(total_points):
+        win += 1
+
+print("List of all points values from each shuffle:", shuffle_result)
+print("The maximum value of all shuffles:", max(shuffle_result))
+print("Won", win, "times out of", shuffle, "number of shuffles")
