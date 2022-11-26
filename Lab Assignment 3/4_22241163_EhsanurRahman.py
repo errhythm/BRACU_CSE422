@@ -35,12 +35,12 @@ def crossover(x, y):
     return np.append(x[:c], y[c:])
 
 
-def mutate(x, mutation_threshold):
-    n = len(x)
+def mutate(child, mutation_threshold):
+    n = len(child)
     for i in range(n):
         if np.random.random() <= mutation_threshold:
-            x[i] = 1 - x[i]
-    return x
+            child[i] = 1 - child[i]
+    return child
 
 
 def GA(population, n, mutation_threshold):
