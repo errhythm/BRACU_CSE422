@@ -35,7 +35,7 @@ def crossover(x, y):
     return np.append(x[:c], y[c:])
 
 
-def mutation(x, mutation_threshold):
+def mutate(x, mutation_threshold):
     n = len(x)
     for i in range(n):
         if np.random.random() <= mutation_threshold:
@@ -51,7 +51,7 @@ def GA(population, n, mutation_threshold):
         for i in range(len(population) // 2):
             x, y = select(population, fitness(population, n))
             z = crossover(population[x], population[y])
-            w = mutation(z, mutation_threshold)
+            w = mutate(z, mutation_threshold)
             Q[i] = w
         population = Q
         fit = fitness(population, n)
